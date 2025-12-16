@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>REAL TIME MACHINE</title>
+<style>
+/* 1. Enhanced Futuristic Background & General Style */
+body {
+    font-family: 'Electrolize', 'Consolas', 'Courier New', monospace; /* Using a modern tech-like font */
+    /* Deeper, more intense gradient */
+    background: radial-gradient(circle at center, #01000f 0%, #000000 100%);
+    color: #00ffff; /* **Cyan/Aqua for primary text (Holographic feel)** */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+    user-select: none;
+    perspective: 1200px; /* Increased 3D perspective */
+}
+
+/* 2. Header Style: English Titles */
+.header {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 50px;
+}
+.header h1 {
+    font-size: 2.8em;
+    text-transform: uppercase;
+    margin: 0 0 5px 0;
+    text-shadow: 
+        0 0 10px #00ffff, 
+        0 0 30px rgba(0, 255, 255, 0.8),
+        0 0 50px rgba(0, 255, 255, 0.5); /* Intense Cyan Glow */
+    letter-spacing: 5px;
+}
+.header h2 {
+    font-size: 1.4em;
+    color: #ff33cc; /* Bright Pink/Fuchsia for secondary title */
+    margin: 0;
+    text-shadow: 0 0 10px #ff33cc;
+    letter-spacing: 3px;
+    margin-top: 5px;
+}
+
+/* 3. Fingerprint Scanner Style (The Technical Ring) */
+#scanner-container {
+    display: block;
+    cursor: pointer;
+    text-align: center;
+    transition: opacity 0.5s;
+    opacity: 1;
+    transform-style: preserve-3d;
+}
+
+#fingerprint-icon {
+    width: 180px; 
+    height: 180px; 
+    background: rgba(0, 255, 255, 0.03); 
+    border: 4px solid #00ffff; 
+    border-radius: 50%;
+    margin: 30px auto;
+    position: relative;
+    overflow: hidden; 
+    /* Intense inner and outer glow */
+    box-shadow: 
+        0 0 15px #00ffff, 
+        0 0 60px rgba(0, 255, 255, 0.5), 
+        inset 0 0 25px rgba(0, 255, 255, 0.4); 
+    
+    /* Initial animation for the outer ring */
+    animation: rotate-ring 8s linear infinite, electrical-flicker 0.1s infinite; 
+    transform: rotateX(75deg); 
+    transition: transform 0.5s ease-out, border-color 0.3s;
+}
+
+/* Inner glowing 'coil' or 'circuit' ring */
+#fingerprint-icon::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    border-radius: 50%;
+    border: 3px dashed #ff33cc; 
+    /* Electrical look with pulse */
+    box-shadow: 
+        inset 0 0 10px #ff33cc, 
+        0 0 15px #ff33cc;
+    animation: rapid-pulse-glow 0.5s infinite alternate; 
+}
+
+/* --- Scanning Sweep Line Effect --- */
+#fingerprint-icon::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 2px; 
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0, 255, 255, 0.1), #ffffff, rgba(0, 255, 255, 0.1));
+    /* Blurry effect for the scan line */
+    box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.5); 
+    z-index: 5;
+    transform-origin: top center;
+    display: none; 
+}
+
+/* Center SCAN text with holographic overlay look */
+#fingerprint-icon span {
+    content: 'SCAN';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.8em; 
+    font-weight: bold;
+    color: #01000f; 
+    background: #00ffff; 
+    padding: 7px 14px;
+    border-radius: 5px;
+    text-shadow: 0 0 15px #00ffff;
+    box-shadow: 0 0 20px #00ffff, 0 0 40px rgba(0, 255, 255, 0.6); 
+    letter-spacing: 2px;
+    transition: all 0.2s;
+}
+
+/* New Animation: Electrical Flicker for the outer ring */
+@keyframes electrical-flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.9; box-shadow: 0 0 15px #00ffff, 0 0 80px rgba(0, 255, 255, 0.9), inset 0 0 30px rgba(0, 255, 255, 0.7); }
+}
+
+@keyframes rotate-ring {
+    from { transform: rotateX(75deg) rotateZ(0deg); }
+    to { transform: rotateX(75deg) rotateZ(360deg); }
+}
+
+/* Very fast pulse */
+@keyframes rapid-pulse-glow {
+    from { opacity: 0.8; border-color: #ff33cc; box-shadow: inset 0 0 5px #ff33cc, 0 0 10px #ff33cc; }
+    to { opacity: 1; border-color: #ffffff; box-shadow: inset 0 0 25px #ffffff, 0 0 25px #ffffff; }
+}
+
+.scan-text {
+    font-size: 1.2em;
+    margin-top: 25px;
+    color: #00ffff;
+    text-shadow: 0 0 5px #00ffff;
+}
+
+/* Progress Bar during Scan - Made it a 'Charging' bar */
+#progress-bar-container {
+    width: 200px; 
+    height: 8px; 
+    background-color: rgba(0, 255, 255, 0.1);
+    margin-top: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+    display: none;
+    border: 1px solid #00ffff;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+#progress-bar {
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #ff33cc, #00ffff); 
+    transition: width 0.05s linear; 
+    box-shadow: 0 0 8px #00ffff, 0 0 20px rgba(0, 255, 255, 0.9); 
+}
+
+/* Scanning State Styles */
+.scanning #fingerprint-icon {
+    animation: electrical-flicker 0.05s infinite, scan-sweep 3s linear infinite; 
+    transform: rotateX(0deg); 
+    border-color: #ff33cc; 
+    box-shadow: 
+        0 0 15px #ff33cc, 
+        0 0 80px rgba(255, 51, 204, 0.8),
+        inset 0 0 30px rgba(255, 51, 204, 0.6);
+}
+
+.scanning #fingerprint-icon::before {
+    border-color: #00ffff; 
+    box-shadow: inset 0 0 30px #00ffff, 0 0 20px #00ffff;
+    animation: rapid-pulse-glow 0.2s infinite alternate; 
+}
+
+/* Activate sweep line */
+.scanning #fingerprint-icon::after {
+    display: block;
+    animation: scan-sweep 3s linear infinite;
+}
+
+/* Sweep Animation */
+@keyframes scan-sweep {
+    0% { transform: rotate(0deg); opacity: 1; }
+    50% { transform: rotate(180deg); opacity: 0.8; }
+    100% { transform: rotate(360deg); opacity: 1; }
+}
+
+/* Glitch/Holographic Text Effect while scanning */
+.scanning #fingerprint-icon span {
+    color: #ff33cc; 
+    background: transparent;
+    text-shadow: 
+        1px 1px 2px #00ffff, 
+        -1px -1px 2px #ff33cc, 
+        0 0 20px #ff33cc;
+    box-shadow: none;
+    animation: text-glitch 0.1s infinite step-end;
+}
+
+@keyframes text-glitch {
+    0% { transform: translate(-50%, -50%) skewX(0deg); opacity: 1; }
+    25% { transform: translate(-49%, -51%) skewX(5deg); opacity: 0.8; }
+    50% { transform: translate(-50%, -50%) skewX(-5deg); opacity: 1; }
+    75% { transform: translate(-51%, -49%) skewX(2deg); opacity: 0.7; }
+    100% { transform: translate(-50%, -50%) skewX(0deg); opacity: 1; }
+}
+
+/* 4. Video Player Style */
+#video-player {
+    display: none;
+    max-width: 90vw;
+    height: auto;
+    margin-top: 30px;
+    box-shadow: 0 0 50px rgba(0, 255, 255, 1); 
+    border: 4px solid #ff33cc; 
+    z-index: 10;
+    transform: rotateY(0deg);
+    transition: transform 1s;
+    background-color: black;
+}
+#video-player iframe {
+    width: min(80vw, 640px); 
+    height: min(45vw, 360px);
+    display: block;
+}
+
+/* 5. Footer Style: Credit */
+.footer {
+    text-align: center;
+    width: 100%;
+    font-size: 1em;
+    color: #00ffff;
+    letter-spacing: 3px;
+    text-shadow: 0 0 10px #00ffff;
+    opacity: 0.7;
+    margin-top: 50px;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+    <h1>PRESS FINGER TO ACCESS YOUR FUTURE</h1>
+    <h2>REAL TIME MACHINE</h2>
+</div>
+
+<div id="scanner-container">
+    <div id="fingerprint-icon">
+        <span>SCAN</span>
+    </div>
+    <div class="scan-text">Hold for 3 seconds!</div>
+    <div id="progress-bar-container">
+        <div id="progress-bar"></div>
+    </div>
+</div>
+
+<div id="video-player">
+    </div>
+
+<div class="footer">
+    made by debasish sia
+</div>
+
+<script>
+    const SCAN_DURATION = 3000; 
+    const VIDEO_ID = '9-_bOrdIuTs'; 
+
+    const scannerContainer = document.getElementById('scanner-container');
+    const fingerprintIcon = document.getElementById('fingerprint-icon');
+    const scanText = document.querySelector('.scan-text');
+    const videoPlayer = document.getElementById('video-player');
+    const progressBarContainer = document.getElementById('progress-bar-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    let scanTimer = null;
+    let progressInterval = null;
+    let isScanning = false;
+
+    // --- 2. Start Scan (on touch/click) ---
+    const startScan = (event) => {
+        if (isScanning) return;
+
+        isScanning = true;
+        scannerContainer.classList.add('scanning');
+        scanText.textContent = 'SCANNING... CHARGING ENERGY COILS...';
+        
+        progressBarContainer.style.display = 'block';
+        
+        // Start the progress bar animation
+        let startTime = Date.now();
+        progressInterval = setInterval(() => {
+            const elapsedTime = Date.now() - startTime;
+            const percentage = Math.min(100, (elapsedTime / SCAN_DURATION) * 100);
+            progressBar.style.width = percentage + '%';
+        }, 25); 
+
+        // --- 3. Set timer for the 3-second detection ---
+        scanTimer = setTimeout(completeScan, SCAN_DURATION);
+    };
+
+    // --- 4. Stop Scan (on release) ---
+    const stopScan = () => {
+        if (scanTimer && isScanning) {
+            clearTimeout(scanTimer); 
+            clearInterval(progressInterval); 
+            resetScanner();
+            scanText.textContent = 'SCAN FAILED. CONTACT LOST.';
+            progressBar.style.width = '0%';
+            progressBarContainer.style.display = 'none';
+
+            setTimeout(() => {
+                scanText.textContent = 'Hold for 3 seconds!';
+            }, 1500);
+        }
+    };
+
+    const resetScanner = () => {
+        isScanning = false;
+        scannerContainer.classList.remove('scanning');
+        scanTimer = null;
+    };
+
+    // --- 5. Complete Scan and Play Video on the same page ---
+    const completeScan = () => {
+        clearInterval(progressInterval);
+        isScanning = false;
+        
+        // Add a dramatic flair before hiding
+        scannerContainer.classList.remove('scanning');
+        fingerprintIcon.style.cssText = 'transform: scale(1.1); opacity: 0; transition: transform 0.5s, opacity 0.5s;';
+        scanText.textContent = 'TIMELINE ACCESS GRANTED!';
+
+
+        setTimeout(() => {
+             scannerContainer.style.display = 'none';
+             videoPlayer.style.display = 'block';
+
+             // Embed the YouTube video player using an iframe
+             videoPlayer.innerHTML = `
+                 <iframe
+                     title="Bhavisya Reveal"
+                     width="640"
+                     height="360"
+                     src="https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&mute=0"
+                     frameborder="0"
+                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                     allowfullscreen>
+                 </iframe>
+             `;
+            // 3D flip effect on video player appearance
+            videoPlayer.style.transform = 'rotateY(0deg)';
+        }, 500);
+    };
+
+    // Event Listeners for click-and-hold (desktop) and touch-and-hold (mobile)
+    fingerprintIcon.addEventListener('mousedown', startScan);
+    document.addEventListener('mouseup', stopScan);
+    fingerprintIcon.addEventListener('touchstart', (e) => {
+        e.preventDefault(); 
+        startScan(e);
+    }, { passive: false });
+    document.addEventListener('touchend', stopScan);
+    
+</script>
+
+</body>
+</html>
